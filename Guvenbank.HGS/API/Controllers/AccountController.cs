@@ -56,9 +56,22 @@ namespace API.Controllers
             }
             else
             {
-                return Ok(new { status = "success", message = "Bu TC Kimlik No üzerine kayıtlı bir HGS vardır !"});
+                return Ok(new { status = "failed", message = "Bu TC Kimlik No üzerine kayıtlı bir HGS vardır !"});
             }
            
+        }
+
+        // GET: api/Account/find/5
+        [HttpGet("find")]
+        public IActionResult GetHgsNo([FromBody] TcModel tcModel)
+        {
+
+            Account account = accountService.Get(tcModel.TcNo);
+
+            if (account == null) return Ok(new { status = "failed", message = "Bu TC Kimlik No üzerine kayıtlı bir HGS yoktur !" });
+
+            else return Ok(new { status = "success", account.HgsNo });
+
         }
 
         // POST: api/Account/Deposit
@@ -67,10 +80,8 @@ namespace API.Controllers
         {
            
             Account account = new Account();
+            account = accountService.Get(accountModel.HgsNo);
             account.Balance = accountModel.Balance;
-            account.HgsNo = accountModel.HgsNo;
-            account.Date = accountModel.Date;
-            account.TcNo = accountModel.TCModel.TcNo;
 
             accountService.Update(account);
 
