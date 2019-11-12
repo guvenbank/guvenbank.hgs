@@ -1,10 +1,14 @@
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 5003
 
 FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY ["API/API.csproj", "API/"]
+COPY ["Business/Business.csproj", "Business/"]
+COPY ["DataAccess/DataAccess.csproj", "DataAccess/"]
+COPY ["Core/Core.csproj", "Core/"]
+COPY ["Entities/Entities.csproj", "Entities/"]
 RUN dotnet restore "API/API.csproj"
 COPY . .
 WORKDIR "/src/API"
