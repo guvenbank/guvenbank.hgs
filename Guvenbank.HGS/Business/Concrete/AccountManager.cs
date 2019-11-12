@@ -19,12 +19,17 @@ namespace Business.Concrete
 
         public void Add(Account account)
         {
-            throw new NotImplementedException();
+            accountDal.Add(account);
         }
 
         public Account Get(int HGS)
         {
             return accountDal.Get(x => x.HgsNo == HGS);
+        }
+
+        public Account Get(string TC)
+        {
+            return accountDal.Get(x => x.TcNo == TC);
         }
 
         public int TotalCount()

@@ -11,6 +11,8 @@ namespace Business.Abstract
 
         Account Get(int HGS);
 
+        Account Get(string TC);
+
         bool Update(Account account);
 
         int TotalCount();
