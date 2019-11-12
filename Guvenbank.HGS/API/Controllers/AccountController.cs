@@ -26,10 +26,9 @@ namespace API.Controllers
         [HttpGet("{no}", Name = "Get")]
         public IActionResult Get(int no)
         {
-
             Account account = accountService.Get(no);
 
-            if (account == null) return NotFound();
+            if (account == null) return Ok(new { status = "failed", message = "Lütfen HGS numaranızı kontrol edin." });
 
             return Ok(new { status = "success", account.HgsNo, account.Balance, createdDate = account.Date, account.TcNo });
         }
@@ -61,27 +60,26 @@ namespace API.Controllers
            
         }
 
-        // GET: api/Account/find/5
-        [HttpGet("find")]
-        public IActionResult GetHgsNo([FromBody] TcModel tcModel)
+        // POST: api/Account/find
+        [HttpPost("find")]
+        public IActionResult Find([FromBody] TcModel tcModel)
         {
-
             Account account = accountService.Get(tcModel.TcNo);
 
-            if (account == null) return Ok(new { status = "failed", message = "Bu TC Kimlik No üzerine kayıtlı bir HGS yoktur !" });
+            if (account == null) return Ok(new { status = "failed", message = "Bu TC Kimlik No üzerine kayıtlı bir HGS yoktur!" });
 
             else return Ok(new { status = "success", account.HgsNo });
-
         }
 
         // POST: api/Account/Deposit
         [HttpPost("deposit")]
         public IActionResult Deposit([FromBody] AccountModel accountModel)
         {
-           
-            Account account = new Account();
-            account = accountService.Get(accountModel.HgsNo);
-            account.Balance = accountModel.Balance;
+            Account account = accountService.Get(accountModel.HgsNo);
+
+            if (account == null) return Ok(new { status = "failed", message = "Lütfen HGS numaranızı kontrol edin." });
+
+            account.Balance += accountModel.Balance;
 
             accountService.Update(account);
 
