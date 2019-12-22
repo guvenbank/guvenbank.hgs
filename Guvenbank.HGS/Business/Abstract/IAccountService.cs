@@ -9,7 +9,7 @@ namespace Business.Abstract
     {
         void Add(Account account);
 
-        Account Get(int HGS);
+        Account GetWithHgsNo(string HGS);
 
         Account Get(string TC);
 

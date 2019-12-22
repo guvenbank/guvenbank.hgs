@@ -22,7 +22,7 @@ namespace Business.Concrete
             accountDal.Add(account);
         }
 
-        public Account Get(int HGS)
+        public Account GetWithHgsNo(string HGS)
         {
             return accountDal.Get(x => x.HgsNo == HGS);
         }

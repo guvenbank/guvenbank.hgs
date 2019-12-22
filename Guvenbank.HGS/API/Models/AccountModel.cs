@@ -7,7 +7,7 @@ namespace API.Models
 {
     public class AccountModel
     {
-        public int HgsNo { get; set; }
+        public string HgsNo { get; set; }
         public decimal Balance { get; set; }
     }
 }

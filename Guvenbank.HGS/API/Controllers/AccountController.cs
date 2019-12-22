@@ -24,15 +24,16 @@ namespace API.Controllers
 
         // GET: api/Account/5
         [HttpGet("{no}", Name = "Get")]
-        public IActionResult Get(int no)
+        public IActionResult Get(string no)
         {
-            Account account = accountService.Get(no);
+            Account account = accountService.GetWithHgsNo(no);
 
             if (account == null) return Ok(new { status = "failed", message = "Lütfen HGS numaranızı kontrol edin." });
 
             return Ok(new { status = "success", account.HgsNo, account.Balance, createdDate = account.Date, account.TcNo });
         }
 
+        // POST: api/Account
         [HttpPost]
         public IActionResult Post([FromBody] TcModel tcModel)
         {
@@ -40,12 +41,11 @@ namespace API.Controllers
             if (accountCheck == null)
             {
                 int totalCount = accountService.TotalCount();
-                string hgnNo = Convert.ToString(9001.ToString() + totalCount + 1001.ToString());
-                int accountNo = Convert.ToInt32(hgnNo);
+                string hgsNo = Convert.ToString(9001.ToString() + totalCount + 1001.ToString());
 
                 Account account = new Account();
                 account.Balance = 0.0m;
-                account.HgsNo = accountNo;
+                account.HgsNo = hgsNo;
                 account.Date = DateTime.Now;
                 account.TcNo = tcModel.TcNo;
 
@@ -75,7 +75,7 @@ namespace API.Controllers
         [HttpPost("deposit")]
         public IActionResult Deposit([FromBody] AccountModel accountModel)
         {
-            Account account = accountService.Get(accountModel.HgsNo);
+            Account account = accountService.GetWithHgsNo(accountModel.HgsNo);
 
             if (account == null) return Ok(new { status = "failed", message = "Lütfen HGS numaranızı kontrol edin." });
 
