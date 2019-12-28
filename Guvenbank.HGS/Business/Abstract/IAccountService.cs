@@ -17,5 +17,7 @@ namespace Business.Abstract
 
         int TotalCount();
 
+        List<Account> GetList(string TC);
+
     }
 }

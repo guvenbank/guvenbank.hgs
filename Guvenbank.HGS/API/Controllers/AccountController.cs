@@ -37,38 +37,40 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] TcModel tcModel)
         {
-            Account accountCheck = accountService.Get(tcModel.TcNo);
-            if (accountCheck == null)
-            {
-                int totalCount = accountService.TotalCount();
-                string hgsNo = Convert.ToString(9001.ToString() + totalCount + 1001.ToString());
 
-                Account account = new Account();
-                account.Balance = 0.0m;
-                account.HgsNo = hgsNo;
-                account.Date = DateTime.Now;
-                account.TcNo = tcModel.TcNo;
+            int totalCount = accountService.TotalCount();
+            string hgsNo = Convert.ToString(9001.ToString() + totalCount + 1001.ToString());
 
-                accountService.Add(account);
+            Account account = new Account();
+            account.Balance = 0.0m;
+            account.HgsNo = hgsNo;
+            account.Date = DateTime.Now;
+            account.TcNo = tcModel.TcNo;
 
-                return Ok(new { status = "success", account.HgsNo, account.Balance, createdDate = account.Date, account.TcNo });
-            }
-            else
-            {
-                return Ok(new { status = "failed", message = "Bu TC Kimlik No üzerine kayıtlı bir HGS vardır !"});
-            }
-           
+            accountService.Add(account);
+
+            return Ok(new { status = "success", account.HgsNo, account.Balance, createdDate = account.Date, account.TcNo });   
         }
 
         // POST: api/Account/find
         [HttpPost("find")]
         public IActionResult Find([FromBody] TcModel tcModel)
         {
-            Account account = accountService.Get(tcModel.TcNo);
+            List<Account> accounts = accountService.GetList(tcModel.TcNo);
 
-            if (account == null) return Ok(new { status = "failed", message = "Bu TC Kimlik No üzerine kayıtlı bir HGS yoktur!" });
+            if (accounts == null && accounts.Count <= 0) return Ok(new { status = "failed", message = "Bu TC Kimlik No üzerine kayıtlı bir HGS yoktur!" });
 
-            else return Ok(new { status = "success", account.HgsNo });
+            else
+            {
+                List<object> accountObjects = new List<object>();
+
+                foreach (Account account in accounts)
+                {
+                    accountObjects.Add(new { account.HgsNo });
+                }
+
+                return Ok(new { status = "success", accounts = accountObjects });
+            } 
         }
 
         // POST: api/Account/Deposit

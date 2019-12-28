@@ -43,5 +43,10 @@ namespace Business.Concrete
 
             return true;
         }
+
+        public List<Account> GetList(string TC)
+        {
+            return accountDal.GetList(x => x.TcNo == TC);
+        }
     }
 }
